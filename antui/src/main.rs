@@ -1,12 +1,14 @@
 #![no_std]
 #![no_main]
 
+extern crate alloc;
+
+use alloc::boxed::Box;
 use cortex_m::prelude::_embedded_hal_timer_CountDown;
-use embedded_graphics::{
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::{Circle, PrimitiveStyle},
-};
+// Linked-List First Fit Heap allocator (feature = "llff")
+use embedded_alloc::LlffHeap as Heap;
+use mousefood::{EmbeddedBackend, EmbeddedBackendConfig};
+use ratatui::Terminal;
 use rp2040_panic_usb_boot as _;
 
 use fugit::ExtU32;
@@ -30,6 +32,9 @@ use usb_device::{
 };
 use usbd_serial::{SerialPort, USB_CLASS_CDC};
 
+#[global_allocator]
+static HEAP: Heap = Heap::empty();
+
 #[link_section = ".boot2"]
 #[used]
 pub static BOOT2: [u8; 256] = rp2040_boot2::BOOT_LOADER_GENERIC_03H;
@@ -41,6 +46,14 @@ fn usb_log<B: usb_device::class_prelude::UsbBus>(serial: &mut SerialPort<'_, B>,
 
 #[entry]
 fn main() -> ! {
+    {
+        use core::mem::MaybeUninit;
+        // We need a pretty big heap for ratatui. if the device reconnects as UF2, you probably hit this limit
+        const HEAP_SIZE: usize = 100000;
+        static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
+        unsafe { HEAP.init(&raw mut HEAP_MEM as usize, HEAP_SIZE) }
+    }
+
     let mut pac = pac::Peripherals::take().unwrap();
     let mut watchdog = Watchdog::new(pac.WATCHDOG);
     let sio = Sio::new(pac.SIO);
@@ -125,21 +138,37 @@ fn main() -> ! {
         usb_log(&mut serial, "display init");
     }
 
-    Circle::new(Point::new(0, 0), 40)
-        .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
-        .draw(&mut display)
-        .unwrap();
-
     usb_log(&mut serial, "after display");
 
+    let config = EmbeddedBackendConfig {
+        flush_callback: Box::new(move |d: &mut Ssd1306<_, _, _>| {
+            d.flush().unwrap();
+        }),
+        ..Default::default()
+    };
+
+    let backend = EmbeddedBackend::new(&mut display, config);
+    let mut terminal = match Terminal::new(backend) {
+        Ok(t) => t,
+        Err(_) => {
+            usb_log(&mut serial, "terminal new error");
+            loop {
+                delay.start(50.millis());
+                let _ = nb::block!(delay.wait());
+            }
+        }
+    };
+
     loop {
-        Circle::new(Point::new(0, 0), 40)
-            .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
-            .draw(&mut display)
-            .unwrap();
+        if let Err(_) = terminal.draw(|f| {
+            let area = f.area();
+            let block = ratatui::widgets::Block::bordered().title("rat");
+            f.render_widget(block, area);
+        }) {
+            usb_log(&mut serial, "terminal draw error");
+        }
 
         usb_log(&mut serial, "loop");
-        display.flush().unwrap();
 
         delay.start(50.millis());
         let _ = nb::block!(delay.wait());
