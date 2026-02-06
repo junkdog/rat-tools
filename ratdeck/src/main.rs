@@ -43,6 +43,7 @@ use crate::app::App;
 mod app;
 pub mod assets;
 mod chart;
+mod slides;
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();

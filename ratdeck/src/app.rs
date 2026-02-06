@@ -1,4 +1,4 @@
-use alloc::vec;
+use alloc::{format, vec, vec::Vec};
 use embedded_graphics::{
     image::Image,
     pixelcolor::Rgb565,
@@ -9,13 +9,16 @@ use ratatui::{
     layout::{Alignment, Margin, Rect},
     style::{Style, Stylize},
     text::{Line, Text},
-    widgets::{Block, BorderType, Paragraph},
+    widgets::{Block, BorderType, Paragraph, Wrap},
     Frame,
 };
 use tachyonfx::{fx, Duration as FxDuration, Effect, EffectRenderer};
 use tui_big_text::{BigText, PixelSize};
 
-use crate::chart;
+use crate::{
+    chart,
+    slides::{ImageSlide, Slide, TextSlide, TitleSlide, SLIDES},
+};
 
 pub struct App {
     chart_app: chart::ChartApp,
@@ -39,7 +42,8 @@ impl App {
     }
 
     pub fn handle_button_press(&mut self) {
-        self.current_slide += 1;
+        let total = SLIDES.len() + 2;
+        self.current_slide = (self.current_slide + 1) % total;
         self.effect = Self::get_effect();
     }
 
@@ -51,24 +55,110 @@ impl App {
         if self.current_slide == 1 {
             let im = Image::new(&crate::assets::RAT_CHEF, Point::new(0, 10));
             im.draw(display).unwrap();
+            return;
         }
+        if self.current_slide < 2 {
+            return;
+        };
+
+        let slide_index = self.current_slide - 2;
+        let Some(slide) = SLIDES.get(slide_index) else {
+            return;
+        };
+
+        let image_name = match slide {
+            Slide::Image(ImageSlide { image, .. }) => Some(*image),
+            _ => None,
+        };
+
+        let Some(image_name) = image_name else {
+            return;
+        };
+        let Some(image) = crate::assets::resolve_image(image_name) else {
+            return;
+        };
+
+        let im = Image::new(image, Point::new(0, 0));
+        im.draw(display).unwrap();
     }
 
     pub fn render(&mut self, f: &mut Frame) {
         if self.current_slide == 0 {
             self.intro_slide1(f);
-        }
-
-        if self.current_slide == 1 {
+        } else if self.current_slide == 1 {
             self.intro_slide2(f);
+        } else {
+            let slide_index = self.current_slide - 2;
+            let Some(slide) = SLIDES.get(slide_index) else {
+                return;
+            };
+            match slide {
+                Slide::Title(data) => self.slide_with_title(f, data),
+                Slide::Text(data) => self.slide_with_text(f, data),
+                Slide::Image(data) => self.slide_with_image(f, data),
+            }
         }
 
-        if !self.effect.done() && self.current_slide != 1 {
+        if !self.effect.done() {
             f.render_effect(&mut self.effect, f.area(), FxDuration::from_millis(100));
         }
     }
 
-    fn generic_slide(&mut self, f: &mut Frame) {}
+    fn slide_with_title(&mut self, f: &mut Frame, slide: &TitleSlide) {
+        let lines = vec![Line::default()];
+
+        f.render_widget(
+            Paragraph::new(Text::from(lines))
+                .block(
+                    Block::bordered()
+                        .title(slide.title.white())
+                        .border_type(BorderType::Rounded),
+                )
+                .wrap(Wrap { trim: false }),
+            f.area().inner(Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+        );
+    }
+
+    fn slide_with_text(&mut self, f: &mut Frame, slide: &TextSlide) {
+        f.render_widget(
+            Paragraph::new(Text::from(slide.text.clone()))
+                .block(
+                    Block::bordered()
+                        .title(slide.title.white())
+                        .border_type(BorderType::Rounded),
+                )
+                .wrap(Wrap { trim: false }),
+            f.area().inner(Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+        );
+    }
+
+    fn slide_with_image(&mut self, f: &mut Frame, slide: &ImageSlide) {
+        f.render_widget(
+            Paragraph::new(slide.text.clone())
+                .block(
+                    Block::bordered()
+                        .title(slide.title.white())
+                        .border_type(BorderType::Rounded),
+                )
+                .wrap(Wrap { trim: false }),
+            Rect {
+                x: f.area().width / 2,
+                y: 0,
+                width: f.area().width / 2,
+                height: f.area().height,
+            }
+            .inner(Margin {
+                horizontal: 1,
+                vertical: 2,
+            }),
+        );
+    }
 
     fn intro_slide2(&mut self, f: &mut Frame) {
         f.render_widget(
