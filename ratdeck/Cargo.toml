@@ -22,7 +22,7 @@ embedded-hal-bus = "0.3.0"
 
 mousefood = { git = "https://github.com/ratatui/mousefood", default-features = false, features = ["fonts"] }
 ratatui = { version = "0.30", default-features = false, features = ["portable-atomic"] }
-tui-big-text = { git = "https://github.com/ratatui/tui-widgets" }
+tui-big-text = "0.8.2"
 libm = "0.2.16"
 tachyonfx = { version = "0.23.0", default-features = false }
 
