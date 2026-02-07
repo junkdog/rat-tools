@@ -91,3 +91,4 @@ opt-level = 3
 
 [build-dependencies]
 tui-markdown = "0.3.7"
+image = "0.25.9"

@@ -26,7 +26,7 @@ Let's talk about this.
 
 # init 0
 
-![](vt100.png)
+![image:left](vt100.png)
 
 Before modern computing, we had simple **terminals**.
 
@@ -36,7 +36,7 @@ And we learned to do a lot with very little.
 
 # Then...
 
-![](rat-cup.png)
+![image:left](rat-cup.png)
 
 They changed.
 
@@ -45,6 +45,12 @@ Like everything else.
 They evolved.
 
 Because we always wanted more.
+
+---
+
+# suzui-rs
+
+![image:center](suzui-rs.png)
 
 ---
 

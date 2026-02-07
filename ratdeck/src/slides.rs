@@ -22,7 +22,15 @@ pub struct TextSlide {
 pub struct ImageSlide {
     pub title: &'static str,
     pub image: &'static str,
+    pub position: ImagePosition,
     pub text: &'static Text<'static>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ImagePosition {
+    Left,
+    Center,
+    Right,
 }
 
 include!(concat!(env!("OUT_DIR"), "/slides.rs"));

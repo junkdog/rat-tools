@@ -17,7 +17,7 @@ use tui_big_text::{BigText, PixelSize};
 
 use crate::{
     chart,
-    slides::{ImageSlide, Slide, TextSlide, TitleSlide, SLIDES},
+    slides::{ImagePosition, ImageSlide, Slide, TextSlide, TitleSlide, SLIDES},
 };
 
 pub struct App {
@@ -148,6 +148,9 @@ impl App {
     }
 
     fn slide_with_image(&mut self, f: &mut Frame, slide: &ImageSlide) {
+        if slide.position == ImagePosition::Center {
+            return;
+        }
         let mut text = slide.text.clone();
         text.lines.insert(0, Line::default());
         f.render_widget(
