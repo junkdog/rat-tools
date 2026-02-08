@@ -192,24 +192,24 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    let mut button = pins.gpio2.into_pull_up_input();
-    let mut menu_button = pins.gpio3.into_pull_up_input();
-    let mut buzzer = pins.gpio6.into_push_pull_output();
+    let mut button = pins.gpio14.into_pull_up_input();
+    let mut menu_button = pins.gpio15.into_pull_up_input();
+    let mut buzzer = pins.gpio8.into_push_pull_output();
     let mut adc = Adc::new(pac.ADC, &mut pac.RESETS);
     let mut adc_pin = AdcPin::new(pins.gpio26.into_floating_input()).unwrap();
 
     usb_log(&mut serial, "before i2c");
     let sda = pins
-        .gpio0
+        .gpio6
         .into_pull_up_input()
         .into_function::<FunctionI2C>();
     let scl = pins
-        .gpio1
+        .gpio7
         .into_pull_up_input()
         .into_function::<FunctionI2C>();
 
-    let i2c = I2C::i2c0(
-        pac.I2C0,
+    let i2c = I2C::i2c1(
+        pac.I2C1,
         sda,
         scl,
         400.kHz(),
