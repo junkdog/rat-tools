@@ -185,9 +185,5 @@ fn main() -> ! {
             app.handle_button_press();
             delay.delay_ms(50);
         }
-
-        usb_log(&mut serial, "loop");
-
-        delay.delay_ms(10);
     }
 }

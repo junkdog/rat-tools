@@ -5,13 +5,15 @@ use libm::{cos, sin};
 use ratatui::prelude::*;
 use ratatui::widgets::{Axis, Chart, Dataset, GraphType};
 
-const ARM_POINTS: usize = 220;
+const ARM_POINTS: usize = 120;
 const ARM_SPAN: f64 = 18.0;
-const Y_SCALE: f64 = 0.7;
+const Y_SCALE: f64 = 0.2;
+const TICK_DIV: u32 = 1;
 
 pub struct NebulaApp {
     arms: Vec<Arm>,
     bounds: f64,
+    tick: u32,
 }
 
 struct Arm {
@@ -58,16 +60,23 @@ impl Arm {
 impl NebulaApp {
     pub fn new() -> Self {
         let arms = vec![
-            Arm::new(0.0, 0.03, 8.0, 2.0, Color::LightBlue),
-            Arm::new(2.1, 0.028, 7.6, 2.5, Color::Magenta),
-            Arm::new(4.2, 0.026, 7.9, 1.5, Color::Yellow),
+            Arm::new(0.0, 0.3, 8.0, 2.0, Color::LightBlue),
+            Arm::new(2.1, 0.3, 7.6, 2.5, Color::Magenta),
         ];
         let bounds = 22.0;
 
-        Self { arms, bounds }
+        Self {
+            arms,
+            bounds,
+            tick: 0,
+        }
     }
 
     pub fn on_tick(&mut self) {
+        self.tick = self.tick.wrapping_add(1);
+        if self.tick % TICK_DIV != 0 {
+            return;
+        }
         for arm in &mut self.arms {
             arm.tick();
         }

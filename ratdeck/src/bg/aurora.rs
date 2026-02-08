@@ -5,15 +5,17 @@ use libm::{cos, sin};
 use ratatui::prelude::*;
 use ratatui::widgets::{Axis, Chart, Dataset, GraphType};
 
-const FIELD_POINTS: usize = 260;
-const RING_POINTS: usize = 180;
+const FIELD_POINTS: usize = 120;
+const RING_POINTS: usize = 96;
 const STEP: f64 = 0.08;
 const Y_SCALE: f64 = 0.6;
+const TICK_DIV: u32 = 1;
 
 pub struct AuroraApp {
     fields: Vec<Field>,
     ring: Ring,
     bounds: f64,
+    tick: u32,
 }
 
 struct Field {
@@ -101,7 +103,6 @@ impl AuroraApp {
         let fields = vec![
             Field::new(1.0, 2.2, 22.0, 0.025, Color::Cyan),
             Field::new(1.7, 1.3, 18.0, 0.032, Color::Magenta),
-            Field::new(2.4, 0.9, 14.0, 0.041, Color::Yellow),
         ];
         let ring = Ring::new(10.0, 2.8, 0.05, Color::Blue);
         let bounds = 24.0;
@@ -110,10 +111,15 @@ impl AuroraApp {
             fields,
             ring,
             bounds,
+            tick: 0,
         }
     }
 
     pub fn on_tick(&mut self) {
+        self.tick = self.tick.wrapping_add(1);
+        if self.tick % TICK_DIV != 0 {
+            return;
+        }
         for field in &mut self.fields {
             field.tick();
         }

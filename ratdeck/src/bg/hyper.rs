@@ -5,16 +5,18 @@ use libm::{cos, sin};
 use ratatui::prelude::*;
 use ratatui::widgets::{Axis, Chart, Dataset, GraphType};
 
-const SPIRO_POINTS: usize = 320;
-const LACE_POINTS: usize = 260;
-const SHARDS: usize = 8;
+const SPIRO_POINTS: usize = 160;
+const LACE_POINTS: usize = 140;
+const SHARDS: usize = 5;
 const Y_SCALE: f64 = 0.7;
+const TICK_DIV: u32 = 2;
 
 pub struct HyperApp {
     spiro: Spiro,
     lace: Lace,
     shards: Vec<Shard>,
     bounds: f64,
+    tick: u32,
 }
 
 struct Spiro {
@@ -168,10 +170,15 @@ impl HyperApp {
             lace,
             shards,
             bounds,
+            tick: 0,
         }
     }
 
     pub fn on_tick(&mut self) {
+        self.tick = self.tick.wrapping_add(1);
+        if self.tick % TICK_DIV != 0 {
+            return;
+        }
         self.spiro.tick();
         self.lace.tick();
         for shard in &mut self.shards {
