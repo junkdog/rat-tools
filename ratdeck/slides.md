@@ -10,11 +10,11 @@ This entire talk is rendered on a 240×320 display.
 
 Using `Rust` & `Ratatui`!
 
-- RP2040-Zero microcontroller
-- ST7789 display
-- Hella cheese!
+1. RP2040-Zero microcontroller
+2. ST7789 display
+3. Hella cheese!
 
-Let's talk about this.
+> Let's talk about this.
 
 ---
 
@@ -296,6 +296,64 @@ This is not even our final form.
 
 ---
 
+# Remember, backend-agnostic!
+
+```rust
+// explicit backend setup
+let backend = CrosstermBackend::new(stdout());
+
+let terminal = Terminal::new(backend)?;
+
+terminal.draw(|frame| {
+    // draw widgets
+})?;
+```
+
+---
+
+# **Backend** trait
+
+```rust
+pub trait Backend {
+    fn draw<(&mut self, cells: I);
+    fn clear(&mut self);
+    fn flush(&mut self);
+    fn size(&self);
+    fn get_cursor(&self);
+
+    // cursor, scrolling,
+    // window size, etc.
+}
+```
+
+---
+
+# More backends!
+
+0. **crossterm** for terminal apps
+1. **mousefood** for embedded-graphics
+2. **ratatui-wgpu** for GPU-accelerated rendering
+3. **egui_ratatui** for EGUI widgets
+4. **soft_ratatui** for arbitrary buffers
+5. **bevy_ratatui** for Bevy apps
+6. **ratzilla** for websites
+
+> The possibilities are endless!
+
+---
+
+# Rat in paris
+
+![image:center](rat-in-paris.png)
+
+---
+
+# suzui-rs
+
+![image:center](suzui-rs.png)
+
+---
+
 # suzui-rs
 
 Running Ratatui on a Suzuki Baleno.
@@ -306,9 +364,66 @@ Suzuki Serial Data Line (SDL) viewer in Rust.
 
 ---
 
-# suzui-rs
+# ratatui-psp
 
-![image:center](suzui-rs.png)
+![image:center](ratatui-psp.png)
+
+---
+
+# ratatui-psp
+
+Ratatui on the PlayStation Portable (PSP)!
+
+> gh/overdrivenpotato/rust-psp
+
+---
+
+# ratatui-minecraft
+
+![image:center](ratatui-minecraft.png)
+
+---
+
+# ratatui-minecraft
+
+A Ratatui backend that uses valence-screens to render the terminal
+
+> gh/janTatesa/ratatui-minecraft
+
+---
+
+# Ok, what's going on? Really...
+
+<!-- background: hyper -->
+
+---
+
+# Ratatuify
+
+![image:center](ratatuify.png)
+
+---
+
+# Rat in the wild
+
+![image:center](rat-in-the-wild.png)
+
+---
+
+# TODO
+
+Remember backend agnostic?
+We can use any backend
+Rat in the wild
+Mousefood
+This presentation tool
+Tuitar
+What's next? -> Rust powers the world
+Some meaningful message (about hacking, rats, etc.?)
+
+- World needs better care
+  Hire me & sponsor me
+  I'm out
 
 ---
 
