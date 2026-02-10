@@ -312,7 +312,7 @@ impl App {
                     " | ".white(),
                     "RustNation UK 2026".magenta(),
                 ]),
-                Line::from_iter(["https://github.com/orhun/rustnation2026".white().italic()]),
+                Line::from_iter(["https://github.com/orhun/rat-tools".white().italic()]),
             ])),
             Rect {
                 x: 0,

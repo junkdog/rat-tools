@@ -196,8 +196,6 @@ fn main() -> ! {
     let mut button = pins.gpio14.into_pull_up_input();
     let mut menu_button = pins.gpio15.into_pull_up_input();
     let mut buzzer = pins.gpio8.into_push_pull_output();
-    let mut adc = Adc::new(pac.ADC, &mut pac.RESETS);
-    let mut adc_pin = AdcPin::new(pins.gpio26.into_floating_input()).unwrap();
 
     usb_log(&mut serial, "before i2c");
     let sda = pins

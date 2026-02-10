@@ -1,7 +1,8 @@
 [package]
-edition = "2021"
 name = "ratdeck"
 version = "0.1.0"
+description = "Embedded slideshow tool"
+edition = "2021"
 default-run = "ratdeck"
 
 [dependencies]

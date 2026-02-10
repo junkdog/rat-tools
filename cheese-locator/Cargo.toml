@@ -1,7 +1,8 @@
 [package]
-edition = "2021"
-name = "ratkit"
+name = "cheese-locator"
 version = "0.1.0"
+description = "Locate the cheese by following the instructions and using Morse code"
+edition = "2021"
 
 [dependencies]
 cortex-m = "0.7"

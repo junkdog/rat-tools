@@ -176,7 +176,7 @@ impl App {
             Mode::Imu => {
                 let mut lines = Vec::new();
                 lines.push(Line::styled(
-                    "Powered MPU-6050",
+                    "Powered by MPU-6050",
                     Style::default().fg(Color::Cyan).bold(),
                 ));
                 lines.push(Line::raw(format!(
