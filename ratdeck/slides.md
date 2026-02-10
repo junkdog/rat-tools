@@ -425,11 +425,83 @@ e.g. control robots on a remote planet over TCP and track their progress in the 
 
 Ratatui backend for embedded graphics
 
+Supports ESP32, RP2040, STM32,
+e-ink displays & more!
+
+---
+
+# How?
+
+1. Ratatui widgets produce cells (glyph + fg/bg + style)
+2. Mousefood maps cells to pixels via font + color theme
+3. The display driver receives drawn pixels
+
+> github.com/ratatui/mousefood
+
+---
+
+# Backend setup
+
+```rust
+// pick your driver
+let display = Ssd1306::new(interface, Size72x40, Rotate0);
+
+let backend = EmbeddedBackend::new(&mut display, config);
+
+let terminal = Terminal::new(backend)?;
+```
+
+---
+
+# Render as usual
+
+```rust
+loop {
+    terminal.draw(|frame| {
+      // render widgets here
+    })?;
+}
+```
+
+Events -> State -> UI  
+-> Pixels -> Flush
+
+---
+
+# Font support
+
+Ratatui relies on box-drawing, braille, and other Unicode glyphs.
+
+Many built-in embedded-graphics fonts only cover ASCII/ISO/JIS
+
+Mousefood ships Unicode fonts so most widgets render correctly!
+
+⠁⠃⠉⠙⠑⠋⠓⠟⠿⣿  
+┌─┬─┐ ┏━┳━┓ ╔═╦═╗ ░▒▓█  
+│ │ │ ┃ ┃ ┃ ║ ║ ║ ▄▀▄▀▄
+
+---
+
+# Backend configuration
+
+```rust
+let config = EmbeddedBackendConfig {
+    font_regular: MONO_6X13,
+    font_bold: Some(MONO_6X13_BOLD),
+    font_italic: Some(MONO_6X13_ITALIC),
+    ..Default::default()
+};
+```
+
 ---
 
 # From servers to toasters?
 
 <!-- background: aurora -->
+
+---
+
+# How about this presentation?
 
 ---
 
