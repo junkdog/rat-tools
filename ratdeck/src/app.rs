@@ -5,11 +5,17 @@ use embedded_graphics::{
     prelude::{DrawTarget, OriginDimensions, Point},
     Drawable,
 };
+use libm::sinf;
+use ratatui::widgets::canvas::{Line as CanvasLine, Rectangle as CanvasRect};
 use ratatui::{
-    layout::{Alignment, Constraint, Margin, Rect},
-    style::{Style, Stylize},
+    layout::{Alignment, Constraint, Layout, Margin, Rect},
+    style::{Color, Style, Stylize},
     text::{Line, Text},
-    widgets::{Block, BorderType, Paragraph, Wrap},
+    widgets::{
+        canvas::Canvas, Bar, BarChart, Block, BorderType, Chart, Dataset, Gauge, GraphType,
+        LineGauge, Paragraph, Row, Scrollbar, ScrollbarOrientation, ScrollbarState, Sparkline,
+        Table, Wrap,
+    },
     Frame,
 };
 use tachyonfx::{
@@ -20,6 +26,7 @@ use tui_big_text::{BigText, PixelSize};
 use crate::{
     bg::{aurora, hyper, nebula, waves},
     slides::{Background, ImagePosition, ImageSlide, Slide, TextSlide, TitleSlide, SLIDES},
+    widget::CheeseMeter,
 };
 
 pub struct App {
@@ -28,6 +35,7 @@ pub struct App {
     nebula_app: nebula::NebulaApp,
     hyper_app: hyper::HyperApp,
     current_slide: usize,
+    tick: u32,
     effect: Effect,
     bg_effect: Effect,
 }
@@ -40,6 +48,7 @@ impl App {
             nebula_app: nebula::NebulaApp::new(),
             hyper_app: hyper::HyperApp::new(),
             current_slide: 0,
+            tick: 0,
             effect: Self::get_effect(),
             bg_effect: Self::get_bg_effect(),
         }
@@ -138,6 +147,8 @@ impl App {
     }
 
     pub fn render(&mut self, f: &mut Frame) {
+        self.tick = self.tick.wrapping_add(1);
+
         let Some(slide) = SLIDES.get(self.current_slide) else {
             return;
         };
@@ -154,6 +165,22 @@ impl App {
             self.intro_slide2(f);
         } else if title == Some("<mascot>") {
             self.mascot_slide(f);
+        } else if title == Some("<demo-table-scrollbar>") {
+            self.demo_table_scrollbar(f);
+        } else if title == Some("<demo-sparkline>") {
+            self.demo_sparkline(f);
+        } else if title == Some("<demo-linegauge>") {
+            self.demo_linegauge(f);
+        } else if title == Some("<demo-gauge>") {
+            self.demo_gauge(f);
+        } else if title == Some("<demo-chart>") {
+            self.demo_chart(f);
+        } else if title == Some("<demo-canvas>") {
+            self.demo_canvas(f);
+        } else if title == Some("<demo-barchart>") {
+            self.demo_barchart(f);
+        } else if title == Some("<custom-widget>") {
+            self.custom_widget_slide(f);
         } else if title == Some("<let-him-cook>") {
             // just let him cook
         } else {
@@ -353,5 +380,187 @@ impl App {
             .map(|line| Line::styled(*line, Style::new().white()))
             .collect::<Vec<Line>>();
         f.render_widget(Paragraph::new(mascot), f.area());
+    }
+
+    fn demo_table_scrollbar(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 1,
+        });
+        let chunks = Layout::horizontal([Constraint::Min(0), Constraint::Length(2)]).split(area);
+        let table_area = chunks[0];
+        let scrollbar_area = chunks[1];
+
+        let total_rows = 30usize;
+        let visible = table_area.height.saturating_sub(2) as usize;
+        let visible = visible.max(1);
+        let max_offset = total_rows.saturating_sub(visible).max(1);
+        let offset = (self.tick as usize / 3) % max_offset;
+
+        let mut rows = Vec::new();
+        for i in offset..(offset + visible).min(total_rows) {
+            rows.push(Row::new(vec![
+                format!("Row {i:02}"),
+                format!("v{}", (self.tick + i as u32) % 100),
+            ]));
+        }
+
+        let table = Table::new(rows, [Constraint::Length(10), Constraint::Min(0)])
+            .block(Block::bordered().title("Table + Scrollbar").white())
+            .column_spacing(1);
+        f.render_widget(table, table_area);
+
+        let mut state = ScrollbarState::new(total_rows)
+            .position(offset)
+            .viewport_content_length(visible);
+        let scrollbar =
+            Scrollbar::new(ScrollbarOrientation::VerticalRight).thumb_style(Style::new().yellow());
+        f.render_stateful_widget(scrollbar, scrollbar_area, &mut state);
+    }
+
+    fn demo_sparkline(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+        let data: Vec<u64> = (0..60)
+            .map(|i| {
+                let x = (self.tick as f32 / 8.0) + i as f32 / 4.0;
+                let v = (sinf(x) * 0.5 + 0.5) * 100.0;
+                v as u64
+            })
+            .collect();
+        let sparkline = Sparkline::default()
+            .block(Block::bordered().title("Sparkline").white())
+            .data(data)
+            .style(Style::new().cyan());
+        f.render_widget(sparkline, area);
+    }
+
+    fn demo_linegauge(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 3,
+        });
+        let percent = (self.tick % 100) as u16;
+        let ratio = percent as f64 / 100.0;
+        let gauge = LineGauge::default()
+            .block(Block::bordered().title("LineGauge").white())
+            .ratio(ratio)
+            .label(Line::from(format!("Load {percent}%")).white())
+            .filled_style(Style::new().green())
+            .unfilled_style(Style::new().dark_gray());
+        f.render_widget(gauge, area);
+    }
+
+    fn demo_gauge(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 3,
+        });
+        let percent = (self.tick % 100) as u16;
+        let ratio = percent as f64 / 100.0;
+        let gauge = Gauge::default()
+            .block(Block::bordered().title("Gauge").white())
+            .ratio(ratio)
+            .gauge_style(Style::new().green().on_black());
+        f.render_widget(gauge, area);
+    }
+
+    fn demo_chart(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+        let mut data = Vec::with_capacity(50);
+        for i in 0..50 {
+            let x = i as f64;
+            let y = (sinf((i as f32 / 5.0) + (self.tick as f32 / 10.0)) * 4.0 + 5.0) as f64;
+            data.push((x, y));
+        }
+        let dataset = Dataset::default()
+            .name("cheese")
+            .graph_type(GraphType::Line)
+            .data(&data)
+            .style(Style::new().yellow());
+        let chart = Chart::new(vec![dataset])
+            .block(Block::bordered().title("Chart").white())
+            .x_axis(ratatui::widgets::Axis::default().bounds([0.0, 50.0]))
+            .y_axis(ratatui::widgets::Axis::default().bounds([0.0, 10.0]));
+        f.render_widget(chart, area);
+    }
+
+    fn demo_canvas(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+        let t = (self.tick % 100) as f64;
+        let canvas = Canvas::default()
+            .block(Block::bordered().title("Canvas").white())
+            .x_bounds([0.0, 100.0])
+            .y_bounds([0.0, 100.0])
+            .paint(|ctx| {
+                ctx.draw(&CanvasRect {
+                    x: 10.0,
+                    y: 10.0,
+                    width: 30.0,
+                    height: 20.0,
+                    color: Color::Yellow,
+                });
+                ctx.draw(&CanvasLine::new(0.0, 50.0, t, 80.0, Color::Cyan));
+                ctx.draw(&CanvasLine::new(
+                    100.0 - t,
+                    20.0,
+                    100.0,
+                    20.0 + t / 2.0,
+                    Color::Green,
+                ));
+            });
+        f.render_widget(canvas, area);
+    }
+
+    fn demo_barchart(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+        let base = (self.tick % 50) as u64;
+        let bars = vec![
+            Bar::with_label("A", 10 + base),
+            Bar::with_label("B", 30 + (base / 2)),
+            Bar::with_label("C", 20 + (base / 3)),
+            Bar::with_label("D", 40 + (base / 4)),
+            Bar::with_label("E", 15 + (base / 5)),
+        ];
+        let chart = BarChart::new(bars)
+            .block(Block::bordered().title("BarChart").white())
+            .bar_width(3)
+            .bar_gap(1)
+            .bar_style(Style::new().magenta());
+        f.render_widget(chart, area);
+    }
+
+    fn custom_widget_slide(&self, f: &mut Frame) {
+        let area = f.area().inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+
+        let block = Block::bordered()
+            .title("┤ Custom widget ├".white())
+            .border_type(BorderType::Rounded);
+        f.render_widget(block, area);
+
+        let inner = area.inner(Margin {
+            horizontal: 2,
+            vertical: 2,
+        });
+
+        let widget = CheeseMeter {
+            label: "Cheese",
+            value: 42,
+        };
+        f.render_widget(widget, inner);
     }
 }

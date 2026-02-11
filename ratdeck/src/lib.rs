@@ -6,3 +6,4 @@ pub mod app;
 pub mod assets;
 pub mod bg;
 pub mod slides;
+pub mod widget;

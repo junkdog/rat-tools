@@ -246,6 +246,54 @@ terminal.draw(|frame| {
 
 ---
 
+# <demo-table-scrollbar>
+
+---
+
+# <demo-sparkline>
+
+---
+
+# <demo-linegauge>
+
+---
+
+# <demo-gauge>
+
+---
+
+# <demo-chart>
+
+---
+
+# <demo-canvas>
+
+---
+
+# <demo-barchart>
+
+---
+
+# Custom widgets
+
+Widgets are just `Widget::render`:
+
+```rust
+struct CheeseMeter { value: u16 }
+
+impl Widget for CheeseMeter {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        // draw cells directly
+    }
+}
+```
+
+---
+
+# <custom-widget>
+
+---
+
 # Event handling
 
 ```rust
