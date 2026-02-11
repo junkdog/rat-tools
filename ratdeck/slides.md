@@ -1,4 +1,4 @@
-# Wake up... The terminal has you. Follow the white rat.
+# WAKE UP. THE TERMINAL HAS YOU. FOLLOW THE WHITE RAT.
 
 <!-- background: nebula -->
 
@@ -173,7 +173,7 @@ Find the best game deals across Steam, Epic Games & more.
 
 ---
 
-# A terminal renaissance?
+# A TERMINAL RENAISSANCE?
 
 <!-- This rat library keeps popping up everywhere! -->
 
@@ -384,7 +384,7 @@ Build TUIs for UEFI firmware interfaces, like your BIOS!
 
 ---
 
-# Ok, what's going on? Really...
+# OK, WHAT'S GOING ON? REALLY...
 
 <!-- background: hyper -->
 
@@ -443,7 +443,7 @@ e-ink displays & more!
 # Backend setup
 
 ```rust
-// pick your driver
+// Pick your display driver
 let display = Ssd1306::new(interface, Size72x40, Rotate0);
 
 let backend = EmbeddedBackend::new(&mut display, config);
@@ -463,8 +463,8 @@ loop {
 }
 ```
 
-Events -> State -> UI  
--> Pixels -> Flush
+Events -> State -> UI -> Pixels
+-> Flush
 
 ---
 
@@ -485,7 +485,7 @@ Mousefood ships Unicode fonts so most widgets render correctly!
 # Backend configuration
 
 ```rust
-let config = EmbeddedBackendConfig {
+EmbeddedBackendConfig {
     font_regular: MONO_6X13,
     font_bold: Some(MONO_6X13_BOLD),
     font_italic: Some(MONO_6X13_ITALIC),
@@ -495,13 +495,88 @@ let config = EmbeddedBackendConfig {
 
 ---
 
-# From servers to toasters?
+# FROM SERVERS TO TOASTERS?
 
 <!-- background: aurora -->
 
 ---
 
 # How about this presentation?
+
+Ratatui-powered slide deck:
+
+> Ratdeck!
+
+- RP2040 + ST7789 @ 320x240
+- Build-time slide generation
+- All slides are Markdown
+- Bundled images/assets
+- Desktop simulator (SDL)
+
+<!-- TODO: mention total RAM -->
+
+---
+
+# Ratdeck flow
+
+1. Author slides in `slides.md`
+2. Build script compiles slides + assets
+3. RP2040 renders with Ratatui + Mousefood
+
+> build.rs does the heavy lifting!
+
+- Parse slides
+- Extract and convert images
+- Embed everything in the firmware
+
+---
+
+# Slide format
+
+```md
+# Title
+
+![image:left](rat.png)
+
+Markdown text here...
+```
+
+Custom backgrounds are supported!  
+Rendered with Ratatui as usual.
+
+---
+
+# WE ARE JUST RATS IN A SIMULATION.
+
+<!-- background: waves -->
+
+---
+
+# Images?
+
+```rust
+let image = resolve_image("rat.png");
+let im = Image::new(image, Point::new(0, 0));
+
+let display = terminal
+  .backend_mut().display_mut();
+im.draw(display);
+```
+
+---
+
+# Limitations
+
+- Raw RGB565 is 2 bytes/pixel
+- 320x240 image ≈ 153,600 bytes
+- Heap is ~200KB on device
+- Too many assets = larger firmware
+
+Maybe stream images from external SPI flash? (e.g. W25Qxx)
+
+Or compression?
+
+### No thanks, I'll just render this with my last 150kB:
 
 ---
 
@@ -512,6 +587,41 @@ let config = EmbeddedBackendConfig {
 panicked at library/alloc/src/alloc.rs:439:13:
 
 cheese allocation of 113920 bytes failed
+
+---
+
+# Our ecosystem
+
+0. Ratatui
+1. Mousefood
+2. tui-big-text: large text
+3. tui-markdown: markdown rendering
+4. tachyonfx: animations
+
+v \_\_\_\_ v  
+ \(. , .)/ thanks Rust!  
+//———\\
+
+---
+
+# What else?
+
+![image:left](rat-demand.png)
+
+1. Cheese locator
+2. Antui
+3. Tuitar
+
+> gh/orhun/
+> rat-tools
+
+> gh/orhun/tuitar
+
+---
+
+# QR code
+
+todo
 
 ---
 

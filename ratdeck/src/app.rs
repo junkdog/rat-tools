@@ -192,15 +192,20 @@ impl App {
         }
 
         let text = Text::from(vec![Line::styled(
-            slide.title,
-            Style::new().black().on_white(),
+            format!("{}", slide.title),
+            Style::new().white().on_black().bold(),
         )]);
 
         let area = f
             .area()
             .centered(Constraint::Percentage(80), Constraint::Percentage(20));
 
-        f.render_widget(Paragraph::new(text).wrap(Wrap { trim: false }), area);
+        f.render_widget(
+            Paragraph::new(text)
+                .wrap(Wrap { trim: false })
+                .block(Block::bordered().style(Style::new().on_black())),
+            area,
+        );
     }
 
     fn slide_with_text(&mut self, f: &mut Frame, slide: &TextSlide) {
