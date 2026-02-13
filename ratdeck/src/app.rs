@@ -13,13 +13,15 @@ use ratatui::{
     text::{Line, Text},
     widgets::{
         canvas::Canvas, Bar, BarChart, Block, BorderType, Chart, Dataset, Gauge, GraphType,
-        LineGauge, Paragraph, Row, Scrollbar, ScrollbarOrientation, ScrollbarState, Sparkline,
-        Table, Wrap,
+        LineGauge, Padding, Paragraph, RatatuiLogo, Row, Scrollbar, ScrollbarOrientation,
+        ScrollbarState, Sparkline, Table, Wrap,
     },
     Frame,
 };
 use tachyonfx::{
-    fx, pattern::RadialPattern, Duration as FxDuration, Effect, EffectRenderer, Interpolation,
+    fx,
+    pattern::{DiagonalPattern, RadialPattern},
+    Duration as FxDuration, Effect, EffectRenderer, Interpolation,
 };
 use tui_big_text::{BigText, PixelSize};
 
@@ -39,6 +41,7 @@ pub struct App {
     effect: Effect,
     bg_effect: Effect,
     render_transition_effect: bool,
+    logo_effect: Effect,
 }
 
 impl App {
@@ -53,6 +56,7 @@ impl App {
             effect: Self::get_effect(),
             bg_effect: Self::get_bg_effect(),
             render_transition_effect: false,
+            logo_effect: Self::get_logo_effect(),
         }
     }
 
@@ -70,6 +74,14 @@ impl App {
             .with_pattern(RadialPattern::with_transition((0.5, 0.5), 13.0));
 
         fx::repeating(fx::ping_pong(radial_hsl_xform))
+    }
+
+    fn get_logo_effect() -> Effect {
+        let shimmer = fx::hsl_shift_fg([180.0, 40.0, 0.0], (1400, Interpolation::SineInOut))
+            .with_pattern(
+                DiagonalPattern::top_left_to_bottom_right().with_transition_width(10.0),
+            );
+        fx::repeating(fx::ping_pong(shimmer))
     }
 
     pub fn handle_button_press(&mut self) {
@@ -191,6 +203,8 @@ impl App {
             self.sponsor_me_slide(f);
         } else if title == Some("<questions>") {
             self.questions_slide(f);
+        } else if title == Some("<logo>") {
+            self.logo_slide(f);
         } else if title == Some("<demo-table-scrollbar>") {
             self.demo_table_scrollbar(f);
         } else if title == Some("<demo-sparkline>") {
@@ -217,7 +231,9 @@ impl App {
             }
         }
 
-        if self.render_transition_effect && !self.effect.done() {
+        if title == Some("<logo>") {
+            f.render_effect(&mut self.logo_effect, f.area(), FxDuration::from_millis(33));
+        } else if self.render_transition_effect && !self.effect.done() {
             f.render_effect(&mut self.effect, f.area(), FxDuration::from_millis(20));
         }
     }
@@ -526,6 +542,33 @@ impl App {
                 width: f.area().width,
                 height: 2,
             },
+        );
+    }
+
+    fn logo_slide(&mut self, f: &mut Frame) {
+        let content_area = f
+            .area()
+            .centered(Constraint::Length(31), Constraint::Length(8));
+        let [content_block_area, ratatui_url_area, mousefood_url_area] = Layout::vertical([
+            Constraint::Min(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+        ])
+        .areas(content_area);
+
+        let block = Block::bordered()
+            .padding(Padding::uniform(1))
+            .border_style(Color::Yellow);
+        let logo_area = block.inner(content_block_area);
+        f.render_widget(block, content_block_area);
+        f.render_widget(RatatuiLogo::small(), logo_area);
+        f.render_widget(
+            "github.com/ratatui/ratatui".gray().underlined(),
+            ratatui_url_area,
+        );
+        f.render_widget(
+            "github.com/ratatui/mousefood".gray().underlined(),
+            mousefood_url_area,
         );
     }
 
