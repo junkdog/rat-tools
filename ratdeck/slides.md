@@ -1,3 +1,7 @@
+# <logo>
+
+---
+
 # WAKE UP. THE TERMINAL HAS YOU. FOLLOW THE WHITE RAT.
 
 <!-- background: nebula -->
@@ -693,9 +697,3 @@ Still a lot to build.
 ---
 
 # <questions>
-
----
-
-# <logo>
-
----
