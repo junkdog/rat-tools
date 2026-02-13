@@ -7,3 +7,4 @@ pub mod assets;
 pub mod bg;
 pub mod slides;
 pub mod widget;
+mod effect;
