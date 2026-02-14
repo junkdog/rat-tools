@@ -26,7 +26,7 @@ nb = "1.1.0"
 portable-atomic = { version = "*", features = ["critical-section"] }
 embedded-alloc = "0.7.0"
 
-mousefood = { version = "0.4.0", default-features = false, features = ["fonts"] }
+mousefood = { git = "https://github.com/ratatui/mousefood", default-features = false, features = ["fonts"] }
 ratatui = { version = "0.30", default-features = false, features = ["portable-atomic"] }
 tui-big-text = "0.8.2"
 tui-markdown = "0.3.7"
