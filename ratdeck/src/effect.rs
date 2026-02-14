@@ -1,7 +1,7 @@
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use tachyonfx::{fx, EffectManager, Interpolation};
 use tachyonfx::pattern::{DiagonalPattern, RadialPattern};
+use tachyonfx::{fx, EffectManager, Interpolation};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum DeckFx {
@@ -29,12 +29,10 @@ impl EffectRegistry {
     pub fn process_effects(
         &mut self,
         duration: impl Into<tachyonfx::Duration>,
-        buf:
-        &mut Buffer,
-        area: Rect
+        buf: &mut Buffer,
+        area: Rect,
     ) {
-        self.effects
-            .process_effects(duration.into(), buf, area);
+        self.effects.process_effects(duration.into(), buf, area);
     }
 
     // effects below
@@ -42,7 +40,7 @@ impl EffectRegistry {
     pub fn clear_effect(&mut self, id: DeckFx) {
         self.effects.cancel_unique_effect(id);
     }
-    
+
     pub fn register_transition(&mut self) {
         let fx = fx::explode(8.0, 2.0, 120);
 
@@ -51,9 +49,7 @@ impl EffectRegistry {
 
     pub fn register_logo_effect(&mut self) {
         let shimmer = fx::hsl_shift_fg([180.0, 40.0, 0.0], (1400, Interpolation::SineInOut))
-            .with_pattern(
-                DiagonalPattern::top_left_to_bottom_right().with_transition_width(10.0),
-            );
+            .with_pattern(DiagonalPattern::top_left_to_bottom_right().with_transition_width(10.0));
 
         let fx = fx::repeating(fx::ping_pong(shimmer));
 

@@ -21,12 +21,12 @@ use ratatui::{
 use tachyonfx::Duration as FxDuration;
 use tui_big_text::{BigText, PixelSize};
 
+use crate::effect::{DeckFx, EffectRegistry};
 use crate::{
     bg::{aurora, hyper, nebula, waves},
     slides::{Background, ImagePosition, ImageSlide, Slide, TextSlide, TitleSlide, SLIDES},
     widget::CheeseMeter,
 };
-use crate::effect::{DeckFx, EffectRegistry};
 
 pub struct App {
     waves_app: waves::WavesApp,
@@ -50,7 +50,6 @@ impl App {
             effect_registry: EffectRegistry::new(),
         }
     }
-
 
     pub fn handle_button_press(&mut self) {
         self.next_slide();
@@ -98,10 +97,11 @@ impl App {
                 self.effect_registry.register_logo_effect();
             } else if title.starts_with("<demo")
                 || title == "<custom-widget>"
+                || title == "<sponsor>"
                 || title == "<let-him-cook>"
             {
                 self.effect_registry.clear_effect(DeckFx::Transition)
-            }  else {
+            } else {
                 self.effect_registry.register_transition();
             }
         } else {
@@ -243,7 +243,11 @@ impl App {
         // render effects, if we have them
         if self.effect_registry.has_active_effects() {
             let rect = f.area();
-            self.effect_registry.process_effects(FxDuration::from_millis(elapsed_ms), f.buffer_mut(), rect);
+            self.effect_registry.process_effects(
+                FxDuration::from_millis(elapsed_ms),
+                f.buffer_mut(),
+                rect,
+            );
         }
     }
 

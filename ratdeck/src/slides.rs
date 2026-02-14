@@ -55,4 +55,3 @@ pub enum Background {
 }
 
 include!(concat!(env!("OUT_DIR"), "/slides.rs"));
-
