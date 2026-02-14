@@ -3,6 +3,8 @@
 
 extern crate alloc;
 
+mod app;
+
 use alloc::boxed::Box;
 use cortex_m::prelude::_embedded_hal_timer_CountDown;
 // Linked-List First Fit Heap allocator (feature = "llff")
@@ -159,11 +161,12 @@ fn main() -> ! {
         }
     };
 
+    let mut app = app::App::new();
+
     loop {
+        app.on_tick();
         if let Err(_) = terminal.draw(|f| {
-            let area = f.area();
-            let block = ratatui::widgets::Block::bordered().title("rat");
-            f.render_widget(block, area);
+            app.render(f);
         }) {
             usb_log(&mut serial, "terminal draw error");
         }
