@@ -83,7 +83,7 @@ impl App {
     }
 
     fn update_effects_for_slide(&mut self, prev: usize) {
-        let slide = &SLIDES[self.current_slide]; 
+        let slide = &SLIDES[self.current_slide];
         let title = match slide {
             Slide::Title(TitleSlide { title, .. }) => *title,
             Slide::Text(TextSlide { title, .. }) => *title,
@@ -91,12 +91,17 @@ impl App {
         };
 
         if self.is_image_like(prev)
-            || self.is_image_like(self.current_slide) 
-            || slide.background().is_some() 
+            || self.is_image_like(self.current_slide)
+            || slide.background().is_some()
         {
             if title == "<logo>" {
                 self.effect_registry.register_logo_effect();
-            } else {
+            } else if title.starts_with("<demo")
+                || title == "<custom-widget>"
+                || title == "<let-him-cook>"
+            {
+                self.effect_registry.clear_effect(DeckFx::Transition)
+            }  else {
                 self.effect_registry.register_transition();
             }
         } else {
