@@ -400,7 +400,7 @@ impl App {
                     " | ".white(),
                     "RustNation UK 2026".magenta(),
                 ]),
-                Line::from_iter(["https://github.com/orhun/rat-tools".white().italic()]),
+                Line::from_iter(["https://github.com/orhun/rat-tools".white().bold()]),
             ])),
             Rect {
                 x: 0,

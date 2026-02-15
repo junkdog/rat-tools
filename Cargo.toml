@@ -36,6 +36,7 @@ mipidsi = "0.9.0"
 once_cell = { version = "1.21.3", default-features = false, features = ["alloc", "race", "portable-atomic"] }
 libm = "0.2.16"
 image = "0.25.9"
+color_quant = "1.1"
 
 # cargo build/run
 [profile.dev]
