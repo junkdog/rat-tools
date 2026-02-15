@@ -31,7 +31,7 @@ tachyonfx.workspace = true
 embedded-graphics-simulator = { workspace = true, optional = true }
 
 [features]
-simulator = ["embedded-graphics-simulator"]
+simulator = ["embedded-graphics-simulator", "ratatui/std"]
 
 [[bin]]
 name = "simulator"

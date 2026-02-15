@@ -12,6 +12,8 @@ use embedded_hal::digital::{InputPin, OutputPin};
 use embedded_hal::spi::MODE_0;
 use mipidsi::options::Rotation;
 use mousefood::{EmbeddedBackend, EmbeddedBackendConfig};
+use core::num::NonZeroUsize;
+use ratatui::layout::Layout;
 use ratatui::Terminal;
 use rp2040_panic_usb_boot as _;
 
@@ -163,6 +165,8 @@ fn main() -> ! {
     }
 
     usb_log(&mut serial, "after display");
+
+    Layout::init_cache(NonZeroUsize::new(20).unwrap());
 
     let config = EmbeddedBackendConfig {
         font_regular: mono_8x13_atlas(),
