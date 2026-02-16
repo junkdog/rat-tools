@@ -8,6 +8,10 @@
 
 ---
 
+# <intro>
+
+---
+
 # The rat in the room
 
 This entire talk is rendered on a 240×320 display.
@@ -22,164 +26,9 @@ Using `Rust` & `Ratatui`!
 
 ---
 
-# <intro1>
-
----
-
-# <intro2>
-
----
-
-# init 0
-
-![image:left](vt100.png)
-
-Before modern computing, we had simple **terminals**.
-
-And we learned to do a lot with very little.
-
----
-
-# Then...
-
-![image:left](gemini.png)
-
-They changed.
-
-Like everything else.
-
-They evolved.
-
-### Because we always wanted more.
-
----
-
-# Why terminals in 2026?
-
-They are **timeless**, and still relevant.
-
-Building high quality and modern terminal applications is still a problem.
-
-> And it's a new kind of problem.
-
----
-
-# Terminal Bench
-
-Agent performance benchmarks.
-
-1. GPT-5.3-Codex (75.1%)
-2. Claude Opus 4.6 (69.9%)
-3. GPT-5.2 (64.9%)
-4. Gemini 3 Pro (64.7%)
-
-> https://www.tbench.ai
-
----
-
-# codex
-
-![image:center](codex-notice.png)
-
----
-
-# Ecosystem
+# Renaissance?
 
 ![image:left](rat-cup.png)
-
-It isn't just about Codex.
-
-> There is a pattern.
-
-A lot of modern terminal software
-is built with Rust and Ratatui.
-
----
-
-# https://www.reddit.com/r/commandline/comments/1qyq204/why_do_so_many_tui_projects_seem_to_use_rust_as/
-
-![image:center](r-commandline.png)
-
----
-
-# u/HeyCanIBorrowThat
-
-> "I think ratatui makes it really easy to make TUI apps compared to older frameworks like ncurses.
-> Rust is also trendy right now and for good reason"
-
----
-
-# <mascot>
-
----
-
-# Ratatui
-
-> A Rust library for cooking up TUIs
-
-250+ contributors, hundreds of apps, 15M+ crate downloads
-
-`gitui`, `atuin`, `yazi`, `skim`, `dioxus-cli`, `tokio-console` & more!
-
-Used by Netflix, AWS, Oxide & more!
-
-> https://ratatui.rs
-
----
-
-# Vortix
-
-Terminal UI for WireGuard and OpenVPN with real-time telemetry and leak guarding.
-
-> github.com/Harry-kp/vortix
-
----
-
-# Vortix
-
-![image:center](vortix.png)
-
----
-
-# Crabsid
-
-A TUI music player for Commodore 64 SID tunes
-
-> github.com/mlund/crabsid
-
----
-
-# Crabsid
-
-![image:center](crabsid.png)
-
----
-
-# eprofiler-tui
-
-eBPF profiler flamegraph based TUI
-
-> github.com/rogercoll/eprofiler-tui
-
----
-
-# eprofiler-tui
-
-![image:center](eprofiler.png)
-
----
-
-# A TERMINAL RENAISSANCE?
-
-<!-- This rat library keeps popping up everywhere! -->
-
-<!-- background: waves -->
-
----
-
-# Why?
-
-![image:left](rat-ski.png)
 
 1. Performance
 2. Safety
@@ -202,6 +51,10 @@ eBPF profiler flamegraph based TUI
 > "Given this state and these events, the UI renders as _this_, immediately."
 
 ### Events -> State -> UI -> Repeat
+
+---
+
+# <mascot>
 
 ---
 
@@ -420,6 +273,20 @@ Ratatui on the PlayStation Portable (PSP)!
 
 ---
 
+# R36S
+
+![image:center](r36s.png)
+
+---
+
+# R36S
+
+Retro handheld powered by an ARM Cortex-A35 and ArkOS.
+
+Running a live input visualizer TUI!
+
+---
+
 # tui-uefi
 
 Build TUIs for UEFI firmware interfaces, like your BIOS!
@@ -436,13 +303,7 @@ Build TUIs for UEFI firmware interfaces, like your BIOS!
 
 # "ratatuify"
 
-"To rebuild or redesign something using the Rust library Ratatui,
-often transforming a GUI into an interactive terminal UI that's
-more performant and way more fancy."
-
-> "No wonder why your GUI runs so slow. Hold my cheese, let me Ratatuify it."
-
-https://www.urbandictionary.com/define.php?term=ratatuify
+![image:center](ratatuify.png)
 
 ---
 
@@ -517,7 +378,6 @@ Mousefood ships Unicode fonts so most widgets render correctly!
 EmbeddedBackendConfig {
     font_regular: MONO_6X13,
     font_bold: Some(MONO_6X13_BOLD),
-    font_italic: Some(MONO_6X13_ITALIC),
     ..Default::default()
 };
 ```
@@ -540,11 +400,11 @@ EmbeddedBackendConfig {
 
 > Ratatui-powered slide deck.
 
-- RP2040 + ST7789 @ 320x240
-- Build-time slide generation
-- All slides are Markdown
-- Bundled images/assets
-- Desktop simulator (SDL)
+• RP2040 + ST7789 @ 320x240  
+• Build-time slide generation  
+• All slides are Markdown  
+• Bundled images/assets  
+• Desktop simulator (SDL)
 
 CPU: Dual-core Cortex-M0+ @ 133MHz
 
@@ -560,9 +420,9 @@ RAM: 256KB (heap ~200KB)
 
 > build.rs does the heavy lifting!
 
-- Parse slides
-- Extract and convert images
-- Embed everything in the firmware
+• Parse slides  
+• Extract and convert images  
+• Embed everything in the firmware
 
 ---
 
@@ -602,12 +462,18 @@ im.draw(display);
 
 # Limitations
 
-- Raw RGB565 is 2 bytes/pixel
-- 320x240 image ≈ 153,600 bytes
-- Heap is ~200KB on device
-- Too many assets = larger firmware
+• Raw RGB565 is 2 bytes/pixel  
+• 320x240 image ≈ 153,600 bytes  
+• Heap is ~200KB on device  
+• Too many assets = larger firmware
 
-Maybe stream images from external SPI flash? (e.g. W25Qxx)
+---
+
+# Solutions?
+
+![image:left](rat-ski.png)
+
+External flash e.g. W25Qxx?
 
 Or compression?
 
@@ -697,3 +563,7 @@ Still a lot to build.
 ---
 
 # <questions>
+
+Any questions?
+github.com/orhun
+github.com/ratatui

@@ -135,7 +135,7 @@ impl App {
             Slide::Image(ImageSlide { title, .. }) => Some(*title),
         };
 
-        if title == Some("<intro2>") {
+        if title == Some("<questions>") {
             let im = Image::new(&crate::assets::RAT_CHEF, Point::new(0, 10));
             im.draw(display).unwrap();
             return;
@@ -183,10 +183,10 @@ impl App {
             Slide::Image(ImageSlide { title, .. }) => Some(*title),
         };
 
-        if title == Some("<intro1>") {
-            self.intro_slide1(f);
-        } else if title == Some("<intro2>") {
-            self.intro_slide2(f);
+        if title == Some("<intro>") {
+            self.intro_slide(f);
+        } else if title == Some("<questions>") {
+            self.questions_slide(f);
         } else if title == Some("<mascot>") {
             self.mascot_slide(f);
         } else if title == Some("<ratdeck-title>") {
@@ -201,8 +201,6 @@ impl App {
             self.qr_github_slide(f);
         } else if title == Some("<sponsor-me>") {
             self.sponsor_me_slide(f);
-        } else if title == Some("<questions>") {
-            self.questions_slide(f);
         } else if title == Some("<logo>") {
             self.logo_slide(f);
         } else if title == Some("<demo-table-scrollbar>") {
@@ -245,7 +243,7 @@ impl App {
         match slide {
             Slide::Image(_) => true,
             Slide::Title(TitleSlide { title, .. }) | Slide::Text(TextSlide { title, .. }) => {
-                *title == "<intro2>" || *title == "<mascot>"
+                *title == "<questions>" || *title == "<mascot>"
             }
         }
     }
@@ -338,19 +336,18 @@ impl App {
         );
     }
 
-    fn intro_slide2(&mut self, f: &mut Frame) {
+    fn questions_slide(&mut self, f: &mut Frame) {
         f.render_widget(
             Paragraph::new(Text::from(vec![
-                Line::styled("Orhun", Style::new().white().bold()),
-                Line::styled("Parmaksız", Style::new().white().bold()),
-                Line::styled("from Turkey", Style::new().red()),
                 Line::default(),
-                Line::styled("Terminal Chef", Style::new().green()),
-                Line::styled("@ Ratatui", Style::new().green().bold()),
+                Line::styled("Any questions?", Style::new().white().bold()),
                 Line::default(),
-                Line::styled("Package", Style::new().cyan()),
-                Line::styled("Maintainer", Style::new().cyan()),
-                Line::styled("@ Arch Linux", Style::new().cyan().bold()),
+                Line::styled("github/orhun", Style::new().cyan()),
+                Line::styled("github/ratatui", Style::new().green()),
+                Line::default(),
+                Line::styled("P.S: There are", Style::new().yellow().italic()), 
+                Line::styled("rats in this", Style::new().yellow().italic()), 
+                Line::styled("device!", Style::new().yellow().italic()), 
             ]))
             .block(
                 Block::bordered()
@@ -372,7 +369,7 @@ impl App {
         );
     }
 
-    fn intro_slide1(&mut self, f: &mut Frame) {
+    fn intro_slide(&mut self, f: &mut Frame) {
         let first_line = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .style(Style::new().green())
@@ -510,32 +507,6 @@ impl App {
         f.render_widget(
             Paragraph::new(Text::from(vec![Line::from("github.com/orhun").cyan()]))
                 .alignment(Alignment::Center),
-            Rect {
-                x: 0,
-                y: f.area().height.saturating_sub(2),
-                width: f.area().width,
-                height: 2,
-            },
-        );
-    }
-
-    fn questions_slide(&mut self, f: &mut Frame) {
-        let text = BigText::builder()
-            .pixel_size(PixelSize::Full)
-            .lines(vec![" Q&A".white().into()])
-            .build();
-
-        let area = f
-            .area()
-            .centered(Constraint::Percentage(95), Constraint::Percentage(80));
-        f.render_widget(text, area);
-
-        f.render_widget(
-            Paragraph::new(Text::from(vec![Line::from(
-                "P.S. There isn't a rat in this device.",
-            )
-            .yellow()]))
-            .alignment(Alignment::Center),
             Rect {
                 x: 0,
                 y: f.area().height.saturating_sub(2),
