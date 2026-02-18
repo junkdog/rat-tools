@@ -63,7 +63,7 @@ But can it run DOOM?
 
 <!-- new_lines: 4 -->
 
-![image:width:70%](assets/doom-calculator.png)
+![image:width:70%](assets/doom-calculator.jpg)
 
 <!-- alignment: center -->
 
@@ -74,7 +74,7 @@ But can it run DOOM?
 
 <!-- new_lines: 4 -->
 
-![image:width:70%](assets/doom-atm.png)
+![image:width:70%](assets/doom-atm.jpg)
 
 <!-- alignment: center -->
 
