@@ -210,7 +210,7 @@ terminal.draw(|frame| {
 
 ```rust
 pub trait Backend {
-    fn draw<(&mut self, cells: I);
+    fn draw(&mut self, cells: I);
     fn clear(&mut self);
     fn flush(&mut self);
     fn size(&self);
@@ -292,6 +292,20 @@ Running a live input visualizer TUI!
 Build TUIs for UEFI firmware interfaces, like your BIOS!
 
 > github.com/reubeno/tui-uefi
+
+---
+
+# Rat in the Wild Challenge
+
+Push Ratatui to the limit!
+
+Winners:
+
+1. suzui-rs
+2. ratatui-minecraft
+3. texaform: control robots on a remote planet over TCP and track their progress in the terminal :o
+
+> ratatui/ratatui/discussions/1886
 
 ---
 
@@ -487,7 +501,7 @@ Or compression?
 
 panicked at library/alloc/src/alloc.rs:439:13:
 
-cheese allocation of 113920 bytes failed
+> cheese allocation of 113920 bytes failed
 
 ---
 
