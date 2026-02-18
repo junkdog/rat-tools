@@ -161,21 +161,6 @@ match event {
 
 ---
 
-# Wanna learn more?
-
-1. https://ratatui.rs
-2. github.com/ratatui/templates
-
-```sh
-$ cargo install cargo-generate
-
-$ cargo generate ratatui/templates
-```
-
-3. github.com/ratatui/awesome-ratatui
-
----
-
 # More!
 
 ![image:left](rat-demand.png)
@@ -499,7 +484,7 @@ Or compression?
 
 ![image:left](rat-in-paris.png)
 
-panicked at library/alloc/src/alloc.rs:439:13:
+panicked at library/alloc/src/alloc.rs:439
 
 > cheese allocation of 113920 bytes failed
 
@@ -538,11 +523,22 @@ v \_\_\_\_ v
 
 Ratatui brings a new approach to portable UI development.
 
-Terminals + embedded, same tools, same cheese.
+But we still have a lot to build and experiment.
 
-Still a lot to build.
+---
 
-> Rust powers the world!
+# Join the rat movement!
+
+1. https://ratatui.rs
+2. github.com/ratatui/templates
+
+```sh
+$ cargo install cargo-generate
+
+$ cargo generate ratatui/templates
+```
+
+3. github.com/ratatui/awesome-ratatui
 
 ---
 

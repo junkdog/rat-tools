@@ -61,6 +61,28 @@ But can it run DOOM?
 
 <!-- end_slide -->
 
+<!-- new_lines: 4 -->
+
+![image:width:70%](assets/doom-calculator.png)
+
+<!-- alignment: center -->
+
+But can it run DOOM?
+
+<!-- no_footer -->
+<!-- end_slide -->
+
+<!-- new_lines: 4 -->
+
+![image:width:70%](assets/doom-atm.png)
+
+<!-- alignment: center -->
+
+But can it run DOOM?
+
+<!-- no_footer -->
+<!-- end_slide -->
+
 ## Today we will answer a similar question.
 
 <!-- pause -->
@@ -212,6 +234,8 @@ Commodore 64 SID player. Emulates MOS 6502 and MOS 6581/8580 chips.
 
 ## https://github.com/rogercoll/eprofiler-tui
 
+<!-- speaker_note: receives profiling data via an OTLP gRPC endpoint -->
+
 ![image:width:100%](assets/eprofiler-tui.gif)
 
 <!-- alignment: center -->
@@ -232,7 +256,7 @@ eBPF profiler flamegraph based TUI
 <!-- no_footer -->
 <!-- end_slide -->
 
-## Soo, can it run Ratatui?
+## But can it run Ratatui?
 
 <!-- alignment: center -->
 

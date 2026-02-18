@@ -118,10 +118,10 @@ impl Ring {
 impl AuroraApp {
     pub fn new() -> Self {
         let fields = vec![
-            Field::new(1.0, 2.2, 22.0, 0.025, Color::Cyan),
-            Field::new(1.7, 1.3, 18.0, 0.032, Color::Magenta),
+            Field::new(1.0, 2.2, 22.0, 0.025, Color::Rgb(0, 200, 200)),
+            Field::new(1.7, 1.3, 18.0, 0.032, Color::Rgb(0, 160, 80)),
         ];
-        let ring = Ring::new(10.0, 2.8, 0.05, Color::Blue);
+        let ring = Ring::new(10.0, 2.8, 0.05, Color::Rgb(0, 120, 255));
         let bounds = 24.0;
 
         Self {

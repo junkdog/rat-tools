@@ -67,7 +67,7 @@ impl App {
     }
 
     fn get_bg_effect() -> Effect {
-        let fg_shift = [-330.0, 20.0, 20.0];
+        let fg_shift = [160.0, 12.0, 8.0];
         let timer = (1000, Interpolation::SineIn);
 
         let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
