@@ -199,6 +199,8 @@ impl App {
             self.qr_youtube_slide(f);
         } else if title == Some("<qr-github>") {
             self.qr_github_slide(f);
+        } else if title == Some("<grindhouse>") {
+            self.grindhouse_slide(f);
         } else if title == Some("<sponsor-me>") {
             self.sponsor_me_slide(f);
         } else if title == Some("<logo>") {
@@ -480,6 +482,37 @@ impl App {
         let area = f
             .area()
             .centered(Constraint::Percentage(85), Constraint::Percentage(80));
+        f.render_widget(
+            Paragraph::new(text)
+                .alignment(Alignment::Left)
+                .wrap(Wrap { trim: false })
+                .block(Block::default()),
+            area,
+        );
+    }
+
+    fn grindhouse_slide(&mut self, f: &mut Frame) {
+        let text = Text::from(vec![
+            Line::from("    █▀▀▀▀▀█  ▄ █  ▀ ▄▄█▀▄ █▀▀▀▀▀█"),
+            Line::from("    █ ███ █  ▀█ ▄▄▀▀▄▀ █▄ █ ███ █"),
+            Line::from("    █ ▀▀▀ █ ▄   █  ▄▄██▄  █ ▀▀▀ █"),
+            Line::from("    ▀▀▀▀▀▀▀ ▀▄▀ ▀▄▀▄█▄▀ █ ▀▀▀▀▀▀▀"),
+            Line::from("    ▀  ▀▄▀▀ ▀ ▀▄ ▄▀▄█▄  ██▄█ ▄  ▄"),
+            Line::from("     ▄▄  ▄▀ █▄▄ ▄█▀▀▄  ▀ ██▄▄▀██"),
+            Line::from("    ▄▄ ▄▀▄▀▄█▀ █ ▄██▄█ ███▀  ▀ ▀▀"),
+            Line::from("    ▀ ██▄ ▀██▀▄▀▀▀▀▄ █▄▄ ▀█▄██▀█▀"),
+            Line::from("     ▄▀ ▀█▀▀▄▀ ▄▄█▄▄▄▀▄ ▀▀▄▄ ▄ ▀▄"),
+            Line::from("    ▀ ▄█  ▀▄▄ ▀▄█ █▀▀█  █▄▀▀▄  ██"),
+            Line::from("    ▀  ▀ ▀▀▀▄ ▄ ▀ ▄█ ▀▀▄█▀▀▀█ █▄▄"),
+            Line::from("    █▀▀▀▀▀█ ▄▄▄ ▀ ▄▄▀█  █ ▀ █▄▄▀▄"),
+            Line::from("    █ ███ █ ▄▀▄ ▄  ▄▀▄  █▀███▄▄ ▄"),
+            Line::from("    █ ▀▀▀ █  ▀▄ █▄ ▀█████▄▄▄█▀▀▄▀"),
+            Line::from("    ▀▀▀▀▀▀▀ ▀▀▀▀ ▀ ▀▀ ▀ ▀▀   ▀ ▀"),
+        ]);
+
+        let area = f
+            .area()
+            .centered(Constraint::Percentage(95), Constraint::Percentage(90));
         f.render_widget(
             Paragraph::new(text)
                 .alignment(Alignment::Left)

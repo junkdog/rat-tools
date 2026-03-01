@@ -519,14 +519,6 @@ v \_\_\_\_ v
 
 ---
 
-# What's next?
-
-Ratatui brings a new approach to portable UI development.
-
-But we still have a lot to build and experiment.
-
----
-
 # Join the rat movement!
 
 1. https://ratatui.rs
@@ -569,6 +561,22 @@ $ cargo generate ratatui/templates
 ---
 
 # <qr-github>
+
+---
+
+# So, can it run Ratatui?
+
+Probably yes.
+
+### Also, what the hell are you wearing?
+
+An apron.
+
+> grindhouse.dev
+
+---
+
+# <grindhouse>
 
 ---
 
