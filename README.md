@@ -6,6 +6,8 @@ A collection of Rust/[Ratatui](https://ratatui.rs/) embedded projects targeting 
 
 > [!NOTE]  
 > Originally prepared for the [RustNation UK](https://www.rustnationuk.com) conference and the development process is livestreamed on [my YouTube channel](https://www.youtube.com/@orhundev).
+>
+> [**Watch the conference talk here!**](https://www.youtube.com/watch?v=btqNDDuZ3cI)
 
 ## [ratdeck](https://github.com/orhun/rat-tools/tree/main/ratdeck)
 
