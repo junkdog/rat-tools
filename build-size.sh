@@ -4,7 +4,6 @@ set -e
 
 WORKSPACE_ROOT="$(cd "$(dirname "$0")" && pwd)"
 TARGET="thumbv6m-none-eabi"
-BINARY_DIR="$WORKSPACE_ROOT/target/$TARGET/release"
 
 # gruvbox colors
 local rst='\033[0m'
@@ -30,6 +29,9 @@ missing=()
 if ! command -v cargo &>/dev/null; then
     missing+=("  ${orange}cargo${rst}       ${gray}https://rustup.rs${rst}")
 fi
+if ! command -v jq &>/dev/null; then
+    missing+=("  ${orange}jq${rst}          ${gray}install via system package manager${rst}")
+fi
 if ! command -v flip-link &>/dev/null; then
     missing+=("  ${orange}flip-link${rst}   ${gray}cargo install flip-link${rst}")
 fi
@@ -47,10 +49,19 @@ if (( ${#missing} > 0 )); then
     exit 1
 fi
 
+TARGET_DIR="$(
+    cargo metadata --no-deps --format-version 1 --manifest-path "$WORKSPACE_ROOT/Cargo.toml" 2>/dev/null \
+        | jq -r '.target_directory'
+)"
+
+if [[ -z "$TARGET_DIR" || "$TARGET_DIR" == "null" ]]; then
+    echo "${red}error:${rst} failed to determine target directory via cargo metadata"
+    exit 1
+fi
+BINARY_DIR="$TARGET_DIR/$TARGET/release"
+
 usage() {
-    echo "Usage: $0 [-c] <project>"
-    echo "  -c    clean before building"
-    echo "  project: ratdeck | cheese-locator | antui"
+    echo "Usage: ./build-size.sh <project>"
     exit 1
 }
 
@@ -79,16 +90,11 @@ print_section() {
         "$name" "$size" "$(echo "scale=1; $size / 1024" | bc)"
 }
 
-clean=false
-while getopts "c" opt; do
-    case $opt in
-        c) clean=true ;;
-        *) usage ;;
-    esac
-done
-shift $((OPTIND - 1))
+if [[ $# -lt 1 ]]; then
+    usage
+fi
 
-project="${1:?$(usage)}"
+project="$1"
 project_dir="$WORKSPACE_ROOT/$project"
 
 if [[ ! -d "$project_dir" ]]; then
@@ -98,11 +104,6 @@ fi
 
 # build from project dir so .cargo/config.toml is picked up
 cd "$project_dir"
-
-if $clean; then
-    printf "${gray}cleaning...${rst}\n"
-    cargo clean --release --target "$TARGET" -p "$project" 2>/dev/null || true
-fi
 
 printf "${dim}building ${fg0}${bold}$project${rst} ${dim}(release, $TARGET)${rst}\n"
 cargo build --release --target "$TARGET" 2>&1
